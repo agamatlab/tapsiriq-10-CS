@@ -3,13 +3,14 @@ using UIElements;
 
 class DocumentFactory
 {
-    public static DocumentProgram CreateDocument(String type)
+    public static DocumentProgram? CreateDocument(String type)
     {
         return type switch
         {
             "ProDocumentProgram" => new ProDocumentProgram(),
             "ExpertDocument" => new ExpertDocument(),
-            _ => new DocumentProgram()
+            "DocumentProgram" => new DocumentProgram(),
+            _ => null
         };
     }
 }
@@ -45,7 +46,7 @@ class Program
             sbyte choice = (sbyte)UI.GetChoice("Do you want to create:", answers, true);
             if (choice == -1) break;
 
-            DocumentProgram dc = DocumentFactory.CreateDocument(answers[choice].Replace(" ", String.Empty));
+            DocumentProgram? dc = DocumentFactory.CreateDocument(answers[choice].Replace(" ", String.Empty));
 
             dc.SaveDocument();
             dc.EditDocument();
