@@ -1,4 +1,6 @@
-﻿
+﻿using System.Text;
+using UIElements;
+
 class DocumentFactory
 {
     public static DocumentProgram CreateDocument(String type)
@@ -6,7 +8,7 @@ class DocumentFactory
         return type switch
         {
             "ProDocumentProgram" => new ProDocumentProgram(),
-            "Expert Document" => new ExpertDocument(),
+            "ExpertDocument" => new ExpertDocument(),
             _ => new DocumentProgram()
         };
     }
@@ -31,15 +33,25 @@ class ExpertDocument : DocumentProgram
     public sealed override void SaveDocument() => Console.WriteLine("Document Saved in pdf format");
 }
 
-
 class Program
 {
-    enum Types { ProDocumentProgram, ExpertDocument };
     static void Main(string[] args)
     {
-        DocumentProgram dc = DocumentFactory.CreateDocument(Types.ProDocumentProgram.ToString());
-        dc.SaveDocument();
-        
-        
+        UI.ChangeEncoding(Encoding.Unicode, Encoding.Unicode);
+        var answers = new string[] { "Pro Document Program", "Expert Document", "Document Program" };
+
+        while (true)
+        {
+            sbyte choice = (sbyte)UI.GetChoice("Do you want to create:", answers, true);
+            if (choice == -1) break;
+
+            DocumentProgram dc = DocumentFactory.CreateDocument(answers[choice].Replace(" ", String.Empty));
+
+            dc.SaveDocument();
+            dc.EditDocument();
+            dc.OpenDocument();
+
+            Console.ReadKey();
+        }
     }
 }
